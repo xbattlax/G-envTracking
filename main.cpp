@@ -10,9 +10,13 @@
 #include <iostream>
 #include "opencv2/opencv.hpp"
 #include "opencv2/gpu/gpu.hpp"
+#include "Model.cpp"
 
 using namespace cv;
 using namespace cv::gpu;
+
+
+
 
 int main(int argc, char* argv[])
 {
@@ -29,6 +33,15 @@ int main(int argc, char* argv[])
         if (img.empty()){
             return 9;
         }
+        
+        Ptr<FaceRecognizer> model = createFisherFaceRecognizer();
+        //entrainement
+        Model::entrainement(model);
+        // classifier
+        
         imshow("Camera", img);
+        
     }
 }
+
+
