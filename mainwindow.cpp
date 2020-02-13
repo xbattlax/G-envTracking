@@ -31,17 +31,29 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+
     //ui->mdiArea_2->hide();
     VideoCapture cap;
     cap.open(0);
     Mat img;
     cap >> img;
-    QImage imgIn= QImage((uchar*) img.data, img.cols, img.rows, img.step, QImage::Format_Indexed8);
-    ui->opencv->setPixmap(QPixmap::fromImage(imgIn));
+
+    ui->opencv->setPixmap(QPixmap::fromImage(Mat2QImage(&img)));
+
 
 }
 void MainWindow::receiveImg(QImage frame)
 {
+
     ui->opencv->setPixmap(QPixmap::fromImage(frame));
+}
+QImage MainWindow::Mat2QImage(cv::Mat *src)
+{
+     cv::Mat temp; // make the same cv::Mat
+     cv::cvtColor(*src, temp,cv::COLOR_BGR2RGB); // cvtColor Makes a copt, that what i need
+     QImage dest((const uchar *) temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+     dest.bits(); // enforce deep copy, see documentation
+     // of QImage::QImage ( const uchar * data, int width, int height, Format format )
+     return dest;
 }
 

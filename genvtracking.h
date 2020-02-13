@@ -4,6 +4,7 @@
 #include <QImage>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include "opencv2/core.hpp"
 class GenvTracking : public QObject
 {
     Q_OBJECT
@@ -14,12 +15,15 @@ private:
 
     bool rec;
 
+
     bool isOpen(int dev);
 
 
 public:
     explicit GenvTracking(QObject *parent);
     ~GenvTracking();
+    QImage Mat2QImage(cv::Mat *src);
+
 
 signals:
     void sendImg(QImage output);
