@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     GenvTracking *track = new GenvTracking(this);
     track->setStatus(0);
     connect(this, SIGNAL(sendSetup(int)), track, SLOT(setStatus(int)));
+    connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(sendStream()));
     connect(track, SIGNAL(sendImg(QImage)), this, SLOT(receiveImg(QImage)));
 }
 
@@ -28,20 +29,6 @@ MainWindow::~MainWindow()
 }
 
 
-
-void MainWindow::on_pushButton_clicked()
-{
-
-    //ui->mdiArea_2->hide();
-    VideoCapture cap;
-    cap.open(0);
-    Mat img;
-    cap >> img;
-
-    ui->opencv->setPixmap(QPixmap::fromImage(Mat2QImage(&img)));
-
-
-}
 void MainWindow::receiveImg(QImage frame)
 {
 

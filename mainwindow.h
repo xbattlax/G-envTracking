@@ -3,9 +3,10 @@
 
 #include <QMainWindow>
 #include "genvtracking.h"
-
+using namespace cv;
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
+
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -19,7 +20,7 @@ public:
 
 private slots:
     void receiveImg(QImage frame);
-    void on_pushButton_clicked();
+    //void on_pushButton_clicked();
 signals:
     void sendSetup(int dev);
 private:

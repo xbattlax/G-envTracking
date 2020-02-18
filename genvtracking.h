@@ -14,7 +14,7 @@ private:
     cv::VideoCapture *cam;
 
     bool rec;
-
+    bool stream;
 
     bool isOpen(int dev);
 
@@ -23,14 +23,17 @@ public:
     explicit GenvTracking(QObject *parent);
     ~GenvTracking();
     QImage Mat2QImage(cv::Mat *src);
+    void enregistrementModel();
 
 
 signals:
     void sendImg(QImage output);
+    void sendStream();
 
 public slots:
     void recupImg();
     void setStatus(int dev);
+    void funcStream();
 };
 
 #endif // GENVTRACKING_H
