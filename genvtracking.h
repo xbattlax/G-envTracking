@@ -5,6 +5,10 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/core.hpp"
+#include <opencv2/face.hpp>
+#include "boost/filesystem/operations.hpp"
+#include "boost/filesystem/path.hpp"
+#include "boost/progress.hpp"
 using namespace cv;
 
 class GenvTracking : public QObject
@@ -14,6 +18,9 @@ class GenvTracking : public QObject
 private:
     cv::Mat img;
     cv::VideoCapture *cam;
+
+    std::vector<std::string> models;
+    std::vector<Ptr<cv::face::FisherFaceRecognizer>> modelsObj;
 
     bool rec;
     bool stream;
@@ -26,6 +33,7 @@ public:
     ~GenvTracking();
     QImage Mat2QImage(cv::Mat *src);
     void enregistrementModel();
+    void chargerModels();
 
 
 signals:

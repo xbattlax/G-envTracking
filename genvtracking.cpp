@@ -8,6 +8,8 @@ GenvTracking::GenvTracking(QObject *parent):
     stream(false)
 {
     cam=new cv::VideoCapture();
+    models = *new std::vector<std::string>;
+    modelsObj= *new std::vector<Ptr<cv::face::FisherFaceRecognizer>>;
 }
 GenvTracking::~GenvTracking()
 {
@@ -54,16 +56,35 @@ void GenvTracking::funcStream(){
 void GenvTracking::enregistrementModel(){
     std::vector<int> YesOrNot;
     std::vector<Mat> images;
-    Ptr<cv::face::FaceRecognizer> model = createFisherFaceRecognizer();
-    int i;
+    Ptr<cv::face::FisherFaceRecognizer> model = cv::face::FisherFaceRecognizer::create();
+    int i=0;
     while (i<5000){
         cv::Mat img;
         *cam>>img;
-        images.insert(0, img);
-        YesOrNot.insert(1);
+        images.push_back( img);
+        YesOrNot.push_back( 1);
     }
-    model->fit(images, YesOrNot);
-
+    model->train(images, YesOrNot);
     model->save("test.yml");
-    return model;
 }
+
+void GenvTracking::chargerModels(){
+    boost::filesystem::path p("..");
+    for (auto i = boost::filesystem::directory_iterator(p); i != boost::filesystem::directory_iterator(); i++)
+        {
+            if (!is_directory(i->path()))
+            {
+                models.push_back(i->path().filename().string());
+                Ptr<cv::face::FisherFaceRecognizer> m=cv::face::FisherFaceRecognizer::create();
+                m->read(i->path().filename().string());
+                modelsObj.push_back( m);
+
+            }
+            else
+                continue;
+        }
+}
+
+
+
+
