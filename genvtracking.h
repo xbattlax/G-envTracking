@@ -5,6 +5,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/core.hpp"
+using namespace cv;
+
 class GenvTracking : public QObject
 {
     Q_OBJECT

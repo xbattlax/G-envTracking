@@ -1,6 +1,6 @@
 #include "genvtracking.h"
 #include <opencv2/imgproc.hpp>
-#include <opencv2/opencv.hpp>
+
 
 GenvTracking::GenvTracking(QObject *parent):
     QObject(parent),
@@ -53,29 +53,17 @@ void GenvTracking::funcStream(){
 
 void GenvTracking::enregistrementModel(){
     std::vector<int> YesOrNot;
-    std::vector<cv::Mat> images;
-    cv::Ptr<face::FaceRecognizer> model = createFisherFaceRecognizer();
+    std::vector<Mat> images;
+    Ptr<cv::face::FaceRecognizer> model = createFisherFaceRecognizer();
     int i;
     while (i<5000){
         cv::Mat img;
         *cam>>img;
-        images.insert(img);
+        images.insert(0, img);
         YesOrNot.insert(1);
     }
     model->fit(images, YesOrNot);
 
-    model->save(**name+".yml");
+    model->save("test.yml");
     return model;
-
-
-
-
-
-
-
-
-
-
-
-
 }
