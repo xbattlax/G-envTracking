@@ -1,15 +1,15 @@
 #ifndef GENVTRACKING_H
 #define GENVTRACKING_H
 #include <QObject>
+#include <QMainWindow>
 #include <QImage>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/core.hpp"
-#include <opencv2/face.hpp>
-#include "boost/filesystem/operations.hpp"
+/*#include <opencv2/face.hpp>*/
+/*#include "boost/filesystem/operations.hpp"
 #include "boost/filesystem/path.hpp"
-#include "boost/progress.hpp"
-using namespace cv;
+#include "boost/progress.hpp"*/
 
 class GenvTracking : public QObject
 {
@@ -17,33 +17,31 @@ class GenvTracking : public QObject
 
 private:
     cv::Mat img;
-    cv::VideoCapture *cam;
-
-    std::vector<std::string> models;
-    std::vector<Ptr<cv::face::FisherFaceRecognizer>> modelsObj;
-
-    bool rec;
+    cv::VideoCapture* cam;
+    /*std::vector<std::string> models;
+    std::vector<Ptr<cv::face::FisherFaceRecognizer>> modelsObj;*/
     bool stream;
-
-    bool isOpen(int dev);
+    bool rec;
+    void openIfIsNot(const int dev = 0);
 
 
 public:
-    explicit GenvTracking(QObject *parent);
+    explicit GenvTracking(QObject* parent = 0);
     ~GenvTracking();
-    QImage Mat2QImage(cv::Mat *src);
+    QImage Mat2QImage(cv::Mat* src);
     void enregistrementModel();
     void chargerModels();
 
 
 signals:
-    void sendImg(QImage output);
     void sendStream();
+    void sendImg(QImage output);
+    void pushButtonChangeText(std::string txt);
+   
 
 public slots:
     void recupImg();
-    void setStatus(int dev);
+    void setStatut();
     void funcStream();
 };
-
 #endif // GENVTRACKING_H
