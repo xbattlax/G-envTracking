@@ -6,3 +6,6 @@ G-envTracking.sln
 G-envTracking.vcxproj
 G-envTracking.vcxproj.filters
 G-envTracking.vcxproj.user
+x64/**
+release/**
+debug/**

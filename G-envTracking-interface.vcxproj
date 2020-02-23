@@ -186,8 +186,6 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Projects from hell and more\qt_opencv_integration_demo\opencvworker.cpp" />
-    <ClCompile Include="..\..\Projects from hell and more\qt_opencv_integration_demo\qcvwidget.cpp" />
     <ClCompile Include="genvtracking.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
@@ -220,15 +218,8 @@
     <None Include="untitled2_fr_FR.ts" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="..\..\Projects from hell and more\qt_opencv_integration_demo\qcvwidget.ui" />
     <QtUic Include="mainwindow.ui">
     </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="..\..\Projects from hell and more\qt_opencv_integration_demo\opencvworker.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="..\..\Projects from hell and more\qt_opencv_integration_demo\qcvwidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

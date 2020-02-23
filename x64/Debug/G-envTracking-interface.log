@@ -1,9 +1,4 @@
-﻿  Moc'ing mainwindow.h...
-  main.cpp
+﻿  Generate moc_predefs.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(231,5): warning MSB8064: Custom build for item "debug\moc_predefs.h.cbt" succeeded, but specified dependency "d:\fruitier\documents\fichiers\apprentissage\scolaire\iut\cours\canada\cours\envgraphic\opencv\g-envtracking\debug\moc_predefs.h.cbt" does not exist. This may cause incremental build to work incorrectly.
   mainwindow.cpp
-D:\FRUITIER\Documents\Fichiers\Apprentissage\Scolaire\IUT\Cours\CANADA\Cours\EnvGraphic\OpenCv\G-envTracking\mainwindow.cpp(30,20): error C2039: 'putImage': is not a member of 'MainWindow'
-D:\FRUITIER\Documents\Fichiers\Apprentissage\Scolaire\IUT\Cours\CANADA\Cours\EnvGraphic\OpenCv\G-envTracking\mainwindow.h(10): message : see declaration of 'MainWindow'
-D:\FRUITIER\Documents\Fichiers\Apprentissage\Scolaire\IUT\Cours\CANADA\Cours\EnvGraphic\OpenCv\G-envTracking\mainwindow.cpp(42,88): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\FRUITIER\Documents\Fichiers\Apprentissage\Scolaire\IUT\Cours\CANADA\Cours\EnvGraphic\OpenCv\G-envTracking\mainwindow.cpp(52,86): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\FRUITIER\Documents\Fichiers\Apprentissage\Scolaire\IUT\Cours\CANADA\Cours\EnvGraphic\OpenCv\G-envTracking\mainwindow.cpp(70,85): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\FRUITIER\Documents\Fichiers\Apprentissage\Scolaire\IUT\Cours\CANADA\Cours\EnvGraphic\OpenCv\G-envTracking\mainwindow.cpp(71,41): error C2065: 'imgIn': undeclared identifier
+  G-envTracking-interface.vcxproj -> D:\FRUITIER\Documents\Fichiers\Apprentissage\Scolaire\IUT\Cours\CANADA\Cours\EnvGraphic\OpenCv\G-envTracking\debug\G-envTracking-interface.exe

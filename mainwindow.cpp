@@ -3,78 +3,70 @@
 #include "opencv2/opencv.hpp"
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
+#include <QTimer>
 #include <iostream>
 #include "genvtracking.h"
-
+#include "qdebug.h"
 using namespace cv;
 using namespace std;
 
+/*
+Constructeur :
+    ui -> fenetre graphique
+    opencv -> QLabel d'affichage de la caméra
+*/
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    GenvTracking *track = new GenvTracking(this);
-    track->setStatus(0);
-    connect(this, SIGNAL(sendSetup(int)), track, SLOT(setStatus(int)));
-    connect(track, SIGNAL(sendImg(QImage)), this, SLOT(receiveImg(QImage)));
+    ui->opencv->setScaledContents(true);
+    init();
 }
 
-
-MainWindow::~MainWindow()
-{
-    //this->camView(false);
+/*
+Destructeur 
+*/
+MainWindow::~MainWindow() {
+    thread->quit();
+    while (!thread->isFinished());
+    delete thread;
     delete ui;
 }
 
-QImage MainWindow::putImage(const Mat& mat)
-{
-    // 8-bits unsigned, NO. OF CHANNELS=1
-    if (mat.type() == CV_8UC1)
-    {
-        // Set the color table (used to translate colour indexes to qRgb values)
-        QVector<QRgb> colorTable;
-        for (int i = 0; i < 256; i++)
-            colorTable.push_back(qRgb(i, i, i));
-        // Copy input Mat
-        const uchar* qImageBuffer = (const uchar*)mat.data;
-        // Create QImage with same dimensions as input Mat
-        QImage img(qImageBuffer, mat.cols, mat.rows, mat.step, QImage::Format_Indexed8);
-        img.setColorTable(colorTable);
-        return img;
-    }
-    // 8-bits unsigned, NO. OF CHANNELS=3
-    if (mat.type() == CV_8UC3)
-    {
-        // Copy input Mat
-        const uchar* qImageBuffer = (const uchar*)mat.data;
-        // Create QImage with same dimensions as input Mat
-        QImage img(qImageBuffer, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
-        return img.rgbSwapped();
-    }
-    else
-    {
-        cout << "ERROR: Mat could not be converted to QImage.";
-        return QImage();
-    }
+/*
+Initie les connexions entre signaux
+*/
+void MainWindow::init() {
+    thread = new QThread(); //Création d'un thread
+    GenvTracking* webcam = new GenvTracking(); //objet qui gère les images OpenCV
+    QTimer* timer = new QTimer(); //objet qui gère la cadence des threads
+    timer->setInterval(1); //cadence du Qtimer
+    
+    connect(timer, SIGNAL(timeout()), webcam, SLOT(recupImg())); //lorsque le timer envoie le signal timeOut -> une image est récupérer sur la webcam
+    connect(thread, SIGNAL(finished()), webcam, SLOT(deleteLater())); //supprimer l'objet webcam quand le thread se termine
+    connect(thread, SIGNAL(finished()), timer, SLOT(deleteLater())); //supprimer l'objet timer quand le thread se termine
+    connect(ui->pushButton, SIGNAL(clicked()), webcam, SLOT(setStatut())); //change l'état de rec dans l'objet webcam
+    connect(webcam, SIGNAL(sendImg(QImage)), this, SLOT(receiveImg(QImage))); //lorsque le signal sendImg(QImage) est émis, la fenetre le récupère pour l'afficher
+    connect(webcam, SIGNAL(pushButtonChangeText(string)), this, SLOT(pushButtonChangeText(string)));
+
+    timer->start();
+    webcam->moveToThread(thread);
+    timer->moveToThread(thread);
+
+    thread->start();
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-    //ui->mdiArea_2->hide();
-    VideoCapture cap;
-    cap.open(0);
-    Mat img;
-    cap >> img;
-    imshow("camera", img);
-    QImage((uchar*) img.data, img.cols, img.rows, img.step, QImage::Format_Indexed8);
-    QPixmap pixmap = QPixmap::fromImage(imgIn);
-   /* QPixmap resized_pixmap = pixmap.scaled(1920, 1920, Qt::AspectRatioMode::KeepAspectRatio);*/
+/*
+Affiche img dans le Qlabel ui->opencv
+*/
+void MainWindow::receiveImg(QImage img)
+{      
+    QPixmap pixmap = QPixmap::fromImage(img);
     ui->opencv->setPixmap(pixmap);
-
-}
-void MainWindow::receiveImg(QImage frame)
-{
-    ui->opencv->setPixmap(QPixmap::fromImage(frame));
 }
 
+void MainWindow::pushButtonChangeText(string txt) {
+    qInfo() << QString::fromStdString(txt);
+    ui->pushButton->setText(QString::fromStdString(txt));
+}

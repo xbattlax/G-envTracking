@@ -56,24 +56,12 @@
     <ClCompile Include="mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Projects from hell and more\qt_opencv_integration_demo\qcvwidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Projects from hell and more\qt_opencv_integration_demo\opencvworker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="genvtracking.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="mainwindow.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="..\..\Projects from hell and more\qt_opencv_integration_demo\opencvworker.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="..\..\Projects from hell and more\qt_opencv_integration_demo\qcvwidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -92,9 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="mainwindow.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="..\..\Projects from hell and more\qt_opencv_integration_demo\qcvwidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
