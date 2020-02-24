@@ -6,9 +6,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/core.hpp"
 #include <opencv2/face.hpp>
-#include "boost/filesystem/operations.hpp"
-#include "boost/filesystem/path.hpp"
-#include "boost/progress.hpp"
+#include "boost/filesystem.hpp"
 using namespace cv;
 
 class GenvTracking : public QObject
