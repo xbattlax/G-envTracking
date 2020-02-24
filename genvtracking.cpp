@@ -2,43 +2,51 @@
 #include <opencv2/imgproc.hpp>
 
 
+
+/*
+Constructeur :
+    cam : VideoCapture -> Capture de la webcam
+    rec : bool -> true si en cours d'enregistrement
+*/
 GenvTracking::GenvTracking(QObject *parent):
     QObject(parent),
     rec(false),
     stream(false)
 {
-    cam=new cv::VideoCapture();
-    models = *new std::vector<std::string>;
-    modelsObj= *new std::vector<Ptr<cv::face::FisherFaceRecognizer>>;
-}
-GenvTracking::~GenvTracking()
-{
-    if(cam->isOpened()) cam->release();
-    delete cam;
-}
-bool GenvTracking::isOpen( int device)
-{
-    if(cam->isOpened()) cam->release();
-    cam->open(device);
-    if(cam->isOpened()) return true;
-    else return false;
-    recupImg();
-}
-void GenvTracking::recupImg(){
-    (*cam) >> img;
-    //imshow("cam",img);
-    QImage output((const unsigned char *)img.data, img.cols, img.rows, QImage::Format_RGBX64);
-    emit sendImg(output);
+    cam = new cv::VideoCapture();
+    /*models = *new std::vector<std::string>;
+    modelsObj= *new std::vector<Ptr<cv::face::FisherFaceRecognizer>>;*/
 }
 
-void GenvTracking::setStatus(int dev){
-    isOpen(dev);
-    if(!cam->isOpened()) {
-        rec = false;
-            return;
-        }
-        rec = true;
+/*
+Destructeur
+*/
+GenvTracking::~GenvTracking()
+{
+    delete cam; //appelle automatiquement cam->release();
 }
+
+/*
+Ouvre le flux vers la webcam s'il ne l'est pas d�j�
+*/
+void GenvTracking::openIfIsNot(const int dev)
+{
+    cam->open(dev); //release automatique
+}
+
+/*
+change l'�tat de rec et ferme le flux vers la webcam s'il passe � false
+*/
+void GenvTracking::setStatut() {
+    std::string txt = "stopper l'enregistrement";
+    rec = (!rec);
+    if (rec == false) {
+        cam->release();
+        txt = "demarrer l'enregistrement";
+    }
+    emit pushButtonChangeText(txt);
+}
+
 QImage GenvTracking::Mat2QImage(cv::Mat *src)
 {
      cv::Mat temp; // make the same cv::Mat
@@ -54,7 +62,7 @@ void GenvTracking::funcStream(){
 }
 
 void GenvTracking::enregistrementModel(){
-    std::vector<int> YesOrNot;
+    /*std::vector<int> YesOrNot;
     std::vector<Mat> images;
     Ptr<cv::face::FisherFaceRecognizer> model = cv::face::FisherFaceRecognizer::create();
     int i=0;
@@ -65,11 +73,11 @@ void GenvTracking::enregistrementModel(){
         YesOrNot.push_back( 1);
     }
     model->train(images, YesOrNot);
-    model->save("test.yml");
+    model->save("test.yml");*/
 }
 
 void GenvTracking::chargerModels(){
-    boost::filesystem::path p("..");
+    /*boost::filesystem::path p("..");
     for (auto i = boost::filesystem::directory_iterator(p); i != boost::filesystem::directory_iterator(); i++)
         {
             if (!is_directory(i->path()))
@@ -82,9 +90,18 @@ void GenvTracking::chargerModels(){
             }
             else
                 continue;
-        }
+        }*/
 }
 
-
-
-
+/*
+V�rfie que le flux de la webcam est ouvert puis lis ton contenu
+Renvoie un signal sendImg(QImage)
+*/
+void GenvTracking::recupImg() {
+    if (rec) {
+        openIfIsNot();
+        cam->read(img);
+        QImage output(img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
+        emit sendImg(output.rgbSwapped()); //rgbSwapped rectifie la colorim�trie de l'image (erreur provenant du format QImage::Format_RGB888
+    }
+}
