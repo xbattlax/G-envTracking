@@ -6,16 +6,16 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/core.hpp"
-<<<<<<< HEAD
 #include <opencv2/face.hpp>
+/*#include <opencv2/face.hpp>
 #include "boost/filesystem.hpp"
 using namespace cv;
 =======
-/*#include <opencv2/face.hpp>*/
-/*#include "boost/filesystem/operations.hpp"
+#include <opencv2/face.hpp>
+#include "boost/filesystem/operations.hpp"
 #include "boost/filesystem/path.hpp"
 #include "boost/progress.hpp"*/
->>>>>>> a3157e1d7d17a1ee055a0402bb67c7570502075e
+
 
 class GenvTracking : public QObject
 {

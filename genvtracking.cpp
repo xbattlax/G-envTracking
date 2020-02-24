@@ -1,8 +1,9 @@
 #include "genvtracking.h"
 #include <opencv2/imgproc.hpp>
+#include "opencv2/face.hpp"
 
 
-
+cv::CascadeClassifier faceCascade;
 /*
 Constructeur :
     cam : VideoCapture -> Capture de la webcam
@@ -101,6 +102,16 @@ void GenvTracking::recupImg() {
     if (rec) {
         openIfIsNot();
         cam->read(img);
+        cv::Mat imageGris;
+        cvtColor( img, imageGris, cv::COLOR_BGR2GRAY );
+        faceCascade.load( "/Users/nathanmetzger/untitled2/haarcascade_frontalface_default.xml" );
+        std::vector<cv::Rect> faces;
+        faceCascade.detectMultiScale(imageGris, faces);
+        for ( size_t i = 0; i < faces.size(); i++ )
+        {
+          cv::Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
+          cv::ellipse( img, center, cv::Size( faces[i].width/2, faces[i].height/2 ), 0, 0, 360, cv::Scalar( 255, 255, 100 ), 4 );
+        }
         QImage output(img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
         emit sendImg(output.rgbSwapped()); //rgbSwapped rectifie la colorim�trie de l'image (erreur provenant du format QImage::Format_RGB888
     }
