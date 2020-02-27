@@ -1,6 +1,9 @@
 #include "genvtracking.h"
 #include <opencv2/imgproc.hpp>
 #include "opencv2/face.hpp"
+#include <string>
+#include <fstream>
+#include <iostream>
 
 
 cv::CascadeClassifier faceCascade;
@@ -15,8 +18,8 @@ GenvTracking::GenvTracking(QObject *parent):
     stream(false)
 {
     cam = new cv::VideoCapture();
-    /*models = *new std::vector<std::string>;
-    modelsObj= *new std::vector<Ptr<cv::face::FisherFaceRecognizer>>;*/
+    //models = *new std::vector<std::string>;
+    modelsObj= *new std::vector<cv::Ptr<cv::face::FisherFaceRecognizer>>;
 }
 
 /*
@@ -63,35 +66,40 @@ void GenvTracking::funcStream(){
 }
 
 void GenvTracking::enregistrementModel(){
-    /*std::vector<int> YesOrNot;
-    std::vector<Mat> images;
-    Ptr<cv::face::FisherFaceRecognizer> model = cv::face::FisherFaceRecognizer::create();
+    recupImg();
+    std::vector<int> nom;
+    std::vector<cv::Mat> images;
+    cv::Ptr<cv::face::FisherFaceRecognizer> model = cv::face::FisherFaceRecognizer::create();
     int i=0;
-    while (i<5000){
+    while (i<500){
+        QString s = QString::number(i);
+        //qInfo("progression :", s);
         cv::Mat img;
         *cam>>img;
-        images.push_back( img);
-        YesOrNot.push_back( 1);
+        cv::Mat imageGris;
+        cvtColor( img, imageGris, cv::COLOR_BGR2GRAY );
+        images.push_back( imageGris);
+        nom.push_back( 0);
     }
-    model->train(images, YesOrNot);
-    model->save("test.yml");*/
+    model->train(images, nom);
+    model->save("test.yml");
+}
+
+void GenvTracking::entrainementModel(){
+
 }
 
 void GenvTracking::chargerModels(){
-    /*boost::filesystem::path p("..");
-    for (auto i = boost::filesystem::directory_iterator(p); i != boost::filesystem::directory_iterator(); i++)
-        {
-            if (!is_directory(i->path()))
-            {
-                models.push_back(i->path().filename().string());
-                Ptr<cv::face::FisherFaceRecognizer> m=cv::face::FisherFaceRecognizer::create();
-                m->read(i->path().filename().string());
-                modelsObj.push_back( m);
 
-            }
-            else
-                continue;
-        }*/
+    std::ifstream fichier("strtok /Users/nathanmetzger/untitled2/models.txt");
+    if(fichier){
+        std::string ligne;
+        while ( std::getline( fichier, ligne )){
+            cv::Ptr<cv::face::FisherFaceRecognizer> m=cv::face::FisherFaceRecognizer::create();
+            m->read(ligne);
+            modelsObj.push_back(m);
+        }
+    }
 }
 
 /*
@@ -100,6 +108,7 @@ Renvoie un signal sendImg(QImage)
 */
 void GenvTracking::recupImg() {
     if (rec) {
+
         openIfIsNot();
         cam->read(img);
         cv::Mat imageGris;

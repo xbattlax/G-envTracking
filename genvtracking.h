@@ -24,8 +24,8 @@ class GenvTracking : public QObject
 private:
     cv::Mat img;
     cv::VideoCapture* cam;
-    /*std::vector<std::string> models;
-    std::vector<Ptr<cv::face::FisherFaceRecognizer>> modelsObj;*/
+    //std::vector<std::string> models;
+    std::vector<cv::Ptr<cv::face::FisherFaceRecognizer>> modelsObj;
     bool stream;
     bool rec;
     void openIfIsNot(const int dev = 0);
@@ -35,8 +35,8 @@ public:
     explicit GenvTracking(QObject* parent = 0);
     ~GenvTracking();
     QImage Mat2QImage(cv::Mat* src);
-    void enregistrementModel();
     void chargerModels();
+    void entrainementModel();
 
 
 signals:
@@ -49,5 +49,6 @@ public slots:
     void recupImg();
     void setStatut();
     void funcStream();
+    void enregistrementModel();
 };
 #endif // GENVTRACKING_H

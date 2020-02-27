@@ -48,6 +48,7 @@ void MainWindow::init() {
     connect(thread, SIGNAL(finished()), timer, SLOT(deleteLater())); //supprimer l'objet timer quand le thread se termine
     connect(ui->pushButton, SIGNAL(clicked()), webcam, SLOT(setStatut())); //change l'�tat de rec dans l'objet webcam
     connect(webcam, SIGNAL(sendImg(QImage)), this, SLOT(receiveImg(QImage))); //lorsque le signal sendImg(QImage) est �mis, la fenetre le r�cup�re pour l'afficher
+    connect(ui->pushButton_3, SIGNAL(clicked()),webcam, SLOT(enregistrementModel()));
     /*connect(webcam, SIGNAL(pushButtonChangeText(string)), this, SLOT(pushButtonChangeText(string)));*/
 
     timer->start();
