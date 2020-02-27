@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QMainWindow>
 #include <QThread>
-#include "genvtracking.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,7 +16,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    QImage Mat2QImage(cv::Mat *src);
+    QImage Mat2QImage(cv::Mat const& src);
+    static void pushButtonChangeText(std::string txt);
 
 private slots:
     void receiveImg(QImage frame);
@@ -27,8 +27,7 @@ signals:
 private:
     Ui::MainWindow *ui;
     QThread *thread;
-    void init();
-public slots:
-    void pushButtonChangeText(std::string txt);
+    static Ui::MainWindow* UI;
+    void init()
 };
 #endif // MAINWINDOW_H

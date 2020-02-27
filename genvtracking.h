@@ -6,10 +6,11 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/core.hpp"
-/*#include <opencv2/face.hpp>*/
-/*#include "boost/filesystem/operations.hpp"
-#include "boost/filesystem/path.hpp"
-#include "boost/progress.hpp"*/
+#include <ctime>
+#include <qdatetime.h>
+#include <opencv2/videoio.hpp>
+#include <qtextstream.h>
+/*#include <opencv2/face.hpp*/
 
 class GenvTracking : public QObject
 {
@@ -23,6 +24,8 @@ private:
     bool stream;
     bool rec;
     void openIfIsNot(const int dev = 0);
+    bool GenvTracking::saveSnapshot();
+    static GenvTracking& capture;
 
 
 public:
@@ -31,7 +34,6 @@ public:
     QImage Mat2QImage(cv::Mat* src);
     void enregistrementModel();
     void chargerModels();
-
 
 signals:
     void sendStream();

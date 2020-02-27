@@ -1,8 +1,6 @@
 #include "mainwindow.h"
-//#include "opencv2/opencv.hpp"
 #include <QApplication>
-
-//using namespace cv;
+#include "opencv2/opencv.hpp"
 
 int main(int argc, char *argv[])
 {

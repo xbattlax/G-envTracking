@@ -1,8 +1,9 @@
 #include "genvtracking.h"
 #include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
 
-
-
+using namespace cv;
+using namespace std;
 /*
 Constructeur :
     cam : VideoCapture -> Capture de la webcam
@@ -13,6 +14,7 @@ GenvTracking::GenvTracking(QObject *parent):
     rec(false),
     stream(false)
 {
+    /*if(capture.)*/
     cam = new cv::VideoCapture();
     /*models = *new std::vector<std::string>;
     modelsObj= *new std::vector<Ptr<cv::face::FisherFaceRecognizer>>;*/
@@ -31,7 +33,7 @@ Ouvre le flux vers la webcam s'il ne l'est pas d�j�
 */
 void GenvTracking::openIfIsNot(const int dev)
 {
-    cam->open(dev); //release automatique
+    if(!cam->isOpened()) cam->open(dev); //release automatique
 }
 
 /*
@@ -104,4 +106,53 @@ void GenvTracking::recupImg() {
         QImage output(img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
         emit sendImg(output.rgbSwapped()); //rgbSwapped rectifie la colorim�trie de l'image (erreur provenant du format QImage::Format_RGB888
     }
+}
+
+
+bool GenvTracking::saveSnapshot() {
+    openIfIsNot();
+    // Default resolution of the frame is obtained.The default resolution is system dependent. 
+    int frame_width = cam->get(CAP_PROP_FRAME_WIDTH);
+    int frame_height = cam->get(CAP_PROP_FRAME_HEIGHT);
+
+    //Création du nom de la vidéo
+    QString* fileName(0); //initialisation du pointeur à 0
+    fileName = new QString();
+    QString date(""), hour("");
+    QTextStream(&date) << QDate::currentDate().year() << '-' << QDate::currentDate().month() << '-' << QDate::currentDate().day();
+    QTextStream(&hour) << QTime::currentTime().hour() << '-' << QTime::currentTime().minute();
+    *fileName = date + '_' + hour + ".mp4";
+    // Define the codec and create VideoWriter object.
+    const int framerate(20);
+    VideoWriter video(fileName->toStdString(), CV_WRAP('M', 'J', 'P', 'G'), framerate, Size(frame_width, frame_height));
+    const int time(10); //temps d'enregistrement en secondes
+    int nbImages(0);
+    while (1)
+    {
+
+        Mat img;
+        // Capture frame-by-frame 
+        *cam >> img;
+        nbImages++;
+        // If the frame is empty, break immediately
+        if (img.empty()) break;
+        // Write the frame into the file 'outcpp.avi'
+        video.write(img);
+        // Display the resulting frame    
+        //imshow("Frame", img);
+
+        // Press  ESC on keyboard to  exit
+        /*char c = (char)waitKey(1);
+        if (c == 27)
+            break;*/
+        if (nbImages == time * framerate) break;
+    }
+
+    // When everything done, release the video capture and write object
+    cam->release();
+    video.release();
+
+    // Closes all the windows
+    /*destroyAllWindows();*/
+    return true;
 }
