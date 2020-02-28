@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMainWindow>
 #include <QThread>
+#include <opencv2/opencv.hpp>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,6 +29,6 @@ private:
     Ui::MainWindow *ui;
     QThread *thread;
     static Ui::MainWindow* UI;
-    void init()
+    void init();
 };
 #endif // MAINWINDOW_H

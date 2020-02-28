@@ -11,7 +11,7 @@
 using namespace cv;
 using namespace std;
 
-
+GenvTracking* GenvTracking::instance(0);
 
 
 cv::CascadeClassifier faceCascade;
@@ -20,15 +20,24 @@ Constructeur :
     cam : VideoCapture -> Capture de la webcam
     rec : bool -> true si en cours d'enregistrement
 */
-GenvTracking::GenvTracking(QObject *parent):
+GenvTracking::GenvTracking(QObject* parent) :
     QObject(parent),
     rec(false),
     stream(false)
 {
-    /*if(capture.)*/
     cam = new cv::VideoCapture();
-    //models = *new std::vector<std::string>;
-    modelsObj= *new std::vector<cv::Ptr<cv::face::FisherFaceRecognizer>>;
+    //models = *new std::vector<std::string>;}
+    instance = this;
+}
+
+GenvTracking* GenvTracking::getInstance()
+{
+    if (!instance)
+    {
+        instance = new GenvTracking();
+    }
+
+    return instance;
 }
 
 /*
@@ -37,6 +46,9 @@ Destructeur
 GenvTracking::~GenvTracking()
 {
     delete cam; //appelle automatiquement cam->release();
+    cam = 0;
+    delete instance;
+    instance = 0;
 }
 
 /*
@@ -75,7 +87,7 @@ void GenvTracking::funcStream(){
 }
 
 void GenvTracking::enregistrementModel(){
-    recupImg();
+    /*recupImg();
     std::vector<int> nom;
     std::vector<cv::Mat> images;
     cv::Ptr<cv::face::FisherFaceRecognizer> model = cv::face::FisherFaceRecognizer::create();
@@ -91,7 +103,7 @@ void GenvTracking::enregistrementModel(){
         nom.push_back( 0);
     }
     model->train(images, nom);
-    model->save("test.yml");
+    model->save("test.yml");*/
 }
 
 void GenvTracking::entrainementModel(){
@@ -100,7 +112,7 @@ void GenvTracking::entrainementModel(){
 
 void GenvTracking::chargerModels(){
 
-    std::ifstream fichier("strtok /Users/nathanmetzger/untitled2/models.txt");
+    /*std::ifstream fichier("strtok /Users/nathanmetzger/untitled2/models.txt");
     if(fichier){
         std::string ligne;
         while ( std::getline( fichier, ligne )){
@@ -108,7 +120,7 @@ void GenvTracking::chargerModels(){
             m->read(ligne);
             modelsObj.push_back(m);
         }
-    }
+    }*/
 }
 
 /*
@@ -122,14 +134,14 @@ void GenvTracking::recupImg() {
         cam->read(img);
         cv::Mat imageGris;
         cvtColor( img, imageGris, cv::COLOR_BGR2GRAY );
-        faceCascade.load( "/Users/nathanmetzger/untitled2/haarcascade_frontalface_default.xml" );
+        /*faceCascade.load( "/Users/nathanmetzger/untitled2/haarcascade_frontalface_default.xml" );
         std::vector<cv::Rect> faces;
         faceCascade.detectMultiScale(imageGris, faces);
         for ( size_t i = 0; i < faces.size(); i++ )
         {
           cv::Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
           cv::ellipse( img, center, cv::Size( faces[i].width/2, faces[i].height/2 ), 0, 0, 360, cv::Scalar( 255, 255, 100 ), 4 );
-        }
+        }*/
         QImage output(img.data, img.cols, img.rows, img.step, QImage::Format_RGB888);
         emit sendImg(output.rgbSwapped()); //rgbSwapped rectifie la colorim�trie de l'image (erreur provenant du format QImage::Format_RGB888
     }
